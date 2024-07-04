@@ -36,7 +36,7 @@ class InterrogateModels:
     def generate_caption(self, pil_image):
         return self.interrogate(pil_image, stringify=True)
 
-    def interrogate(self, pil_image, stringify=False):
+    def interrogate(self, pil_image, stringify=False,threshold=0.5):
 
         results = []
         for table in self.tables:
@@ -44,6 +44,8 @@ class InterrogateModels:
             match_results = table.rank(feat, top_count=5)
             ranks = self.model.similarities(feat, match_results)
             for i in range(len(match_results)):
+                if ranks[i] < threshold:
+                    continue
                 results.append({
                     "tag": match_results[i],
                     "rank": ranks[i],
@@ -57,8 +59,9 @@ class InterrogateModels:
             self,
             image: PIL.Image.Image,
             include_ranks: bool = False,
+            threshold: float = 0.5,
     ):
-        result = self.interrogate(image)
+        result = self.interrogate(image,threshold=threshold)
         if include_ranks:
             return result
         return result

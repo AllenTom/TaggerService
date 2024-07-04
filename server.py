@@ -17,13 +17,14 @@ def make_output(data=None, success=True, error=None):
 
 
 @app.post("/tagimage")
-async def put_object(request: Request, file: UploadFile = File(...), model:str = None):
+async def put_object(request: Request, file: UploadFile = File(...), model: str = None, threshold: float = 0.5):
     request_object_content = await file.read()
     img = Image.open(io.BytesIO(request_object_content))
     if model is None or model == "":
         model = tagger.instance.model_name
-    result = tagger_service.make_tagger(img,model)
+    result = tagger_service.make_tagger(img, model, threshold=threshold)
     return make_output(result)
+
 
 @app.post("/switch")
 async def switch(request: Request):
@@ -32,11 +33,14 @@ async def switch(request: Request):
     return make_output({
         "result": True
     })
+
+
 @app.get("/info")
 async def info():
     return make_output({
         "name": "Image tagger API",
     })
+
 
 @app.get("/state")
 async def state():

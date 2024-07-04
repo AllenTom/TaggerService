@@ -4,11 +4,19 @@ import os
 import torch
 
 
-
-device = torch.device('cuda')
-devCPU = cpu = torch.device("cuda")
+use_device = os.getenv('DEVICE', 'cuda')
+if use_device == 'cuda':
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+        print('use cuda now')
+    else:
+        device = torch.device('cpu')
+        print('cuda is not available, use cpu now')
+else:
+    device = torch.device('cpu')
+    print('use cpu now')
+devCPU = cpu = torch.device(use_device)
 dtype = torch.float16
-device_interrogate = torch.device("cuda")
 precision = "autocast"  # autocast or full
 no_half = False
 interrogate_keep_models_in_memory = False
@@ -27,8 +35,6 @@ interrogate_clip_max_length = 48
 lowvram = False
 medvram = False
 use_cn = False
-interrogate_return_ranks = True
-callbackServer = "http://localhost:6745"
 
 
 def autocast(disable=False):

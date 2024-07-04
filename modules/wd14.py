@@ -21,6 +21,7 @@ VIT_MODEL_REPO = "SmilingWolf/wd-v1-4-vit-tagger-v2"
 MODEL_FILENAME = "model.onnx"
 LABEL_FILENAME = "selected_tags.csv"
 
+
 def load_labels() -> list[str]:
     path = huggingface_hub.hf_hub_download(
         MOAT_MODEL_REPO, LABEL_FILENAME,
@@ -37,7 +38,7 @@ def load_model(model_repo: str, model_filename: str) -> rt.InferenceSession:
     path = huggingface_hub.hf_hub_download(
         model_repo, model_filename,
     )
-    model = rt.InferenceSession(path,providers=['AzureExecutionProvider', 'CPUExecutionProvider'])
+    model = rt.InferenceSession(path, providers=['AzureExecutionProvider', 'CPUExecutionProvider'])
     return model
 
 
@@ -89,16 +90,10 @@ class WaifuDiffusion:
     def __init__(self):
         self.model_name = None
         self.model = None
-        self.general_threshold = 0.35
-        self.character_threshold = 0.35
 
     def load(self, model_name="MOAT"):
         self.model = change_model(model_name)
         self.model_name = model_name
-
-    def set_param(self, general_threshold, character_threshold):
-        self.general_threshold = general_threshold
-        self.character_threshold = character_threshold
 
     def start(self):
         pass
@@ -117,12 +112,13 @@ class WaifuDiffusion:
             self,
             image: PIL.Image.Image,
             include_ranks: bool = False,
+            threshold: float = 0.5,
     ):
         tag_names, rating_indexes, general_indexes, character_indexes = load_labels()
         result = self.predict(
             image=image,
-            general_threshold=self.general_threshold,
-            character_threshold=self.character_threshold,
+            general_threshold=threshold,
+            character_threshold=threshold,
             tag_names=tag_names,
             rating_indexes=rating_indexes,
             general_indexes=general_indexes,

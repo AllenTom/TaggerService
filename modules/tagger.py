@@ -60,7 +60,7 @@ class Tagger():
             self.model.start()
         logger.info("Tagger reloaded in %s seconds", time.time() - start)
 
-    def make_tagger(self, image: Image,model : str | None = None):
+    def make_tagger(self, image: Image,model : str | None = None,threshold: float = 0.5):
         if model is not None:
             if model not in support_model_id:
                 return {
@@ -68,7 +68,7 @@ class Tagger():
                     "success": False
                 }
             self.reload(model)
-        return self.model.tag_multi(image, include_ranks=True)
+        return self.model.tag_multi(image, include_ranks=True,threshold=threshold)
 
 
 instance = Tagger()
