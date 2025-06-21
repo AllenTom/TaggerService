@@ -1,0 +1,16 @@
+services:
+  tagger:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./cache:/app/cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ "gpu" ]
+              count: all
+version: "3.8" 
