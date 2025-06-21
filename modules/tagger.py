@@ -1,5 +1,4 @@
 import logging
-import sys
 import time
 
 from modules import deepbooru, wd14, cliptagger2

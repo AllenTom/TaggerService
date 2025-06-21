@@ -44,3 +44,9 @@ async def state():
         "modelName": tagger.instance.model_name,
         "modelList": tagger.support_model_id
     })
+
+@app.get("/health")
+async def health():
+    return make_output({
+        "status": "healthy"
+    })
