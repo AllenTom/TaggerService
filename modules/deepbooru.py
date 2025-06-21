@@ -32,6 +32,8 @@ class DeepDanbooru:
 
         self.model.eval()
         self.model.to(share.devCPU, share.dtype)
+        if share.device.type == 'cpu':
+            self.model.float()
 
     def start(self):
         self.model.to(share.device)
